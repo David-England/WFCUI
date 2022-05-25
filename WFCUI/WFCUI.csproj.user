@@ -9,6 +9,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="ConfigWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Display.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -17,6 +20,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="ConfigWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Display.xaml">
       <SubType>Designer</SubType>
     </Page>

@@ -5,10 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WFCUI"
         mc:Ignorable="d"
-        Title="WFC" Height="200" Width="160">
+        Title="WFC" Height="240" Width="160">
     
     <Grid>
-        <local:MagicZone VerticalAlignment="Center" HorizontalAlignment="Center"></local:MagicZone>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <local:MagicZone Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center"></local:MagicZone>
+        <Button Grid.Row="1" Name="Config" Content="Config" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Lucida Console" FontSize="16"
+                Foreground="LightGray" Background="White" BorderBrush="LightGray" Click="OnClick_Config"/>
     </Grid>
     
 </Window>

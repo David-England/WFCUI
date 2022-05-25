@@ -10,24 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace WFCUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ConfigWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ConfigWindow : Window
     {
-        public MainWindow()
+        public ConfigWindow()
         {
             InitializeComponent();
-        }
-
-        private void OnClick_Config(object sender, RoutedEventArgs e)
-        {
-            new ConfigWindow().Show();
         }
     }
 }
