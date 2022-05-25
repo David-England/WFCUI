@@ -41,7 +41,7 @@ namespace WFCUI
                 using (DatafileManager dm = new DatafileManager(GrabDataLocation(e)))
                 {
                     BitmapSource bi = RunAlgorithm(dm);
-                    (new Display(dm.FilenameNoExtension, bi)).Show();
+                    new Display(dm.FilenameNoExtension, bi).Show();
                 }
                 
             }
@@ -65,7 +65,7 @@ namespace WFCUI
                 if (dfManager.Extension != ".png") throw new Exception($"Dropped file is a \"{dfManager.Extension}\"; we only accept \".png\"s here.");
 
                 Bitmap bmap = Top.Fire(dfManager.FilenameNoExtension);
-                return (BitmapSource)ConvertOldBitmapToNew(bmap);
+                return ConvertOldBitmapToNew(bmap);
             }
         }
 
