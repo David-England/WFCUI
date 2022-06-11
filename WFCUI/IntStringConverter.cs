@@ -9,7 +9,6 @@ using System.Windows.Data;
 
 namespace WFCUI
 {
-    [ValueConversion(typeof(int), typeof(string))]
     class IntStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo cultureInfo)
