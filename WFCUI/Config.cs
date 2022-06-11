@@ -8,20 +8,78 @@ namespace WFCUI
 {
     internal static class Config
     {
+        internal class ConfigInstance
+        {
+            public bool IsOverlapping
+            {
+                get
+                {
+                    return Config.IsOverlapping;
+                }
+                set
+                {
+                    Config.IsOverlapping = value;
+                }
+            }
+
+            public string Heuristic
+            {
+                get
+                {
+                    return Config.Heuristic ?? "entropy";
+                }
+                set
+                {
+                    if (value != "") Config.Heuristic = value;
+                }
+            }
+
+            public int? MaxAttempts
+            {
+                get
+                {
+                    return Config.MaxAttempts;
+                }
+                set
+                {
+                    if (value.HasValue) Config.MaxAttempts = value.Value;
+                }
+            }
+
+            public int? Size
+            {
+                get
+                {
+                    return Config.Size ?? 48;
+                }
+                set
+                {
+                    if (value.HasValue) Config.Size = value.Value;
+                }
+            }
+
+            public int? N
+            {
+                get
+                {
+                    return Config.N;
+                }
+                set
+                {
+                    if (value.HasValue) Config.N = value.Value;
+                }
+            }
+        }
+
         public static bool IsOverlapping { get; set; } = true;
-        public static int? Height { get; set; } = null;
         public static string Heuristic { get; set; } = "entropy";
-        public static int Limit { get; set; } = -1;
         public static int MaxAttempts { get; set; } = 10;
-        public static bool IsPeriodic { get; set; } = false;
-        public static int? Size { get; set; } = null;
-        public static bool IsTextOutput { get; set; } = false;
-        public static int? Width { get; set; } = null;
-        public static int Ground { get; set; } = 0;
+        public static int? Size { get; set; }
         public static int N { get; set; } = 3;
-        public static bool IsPeriodicInput { get; set; } = true;
-        public static int Symmetry { get; set; } = 8;
-        public static bool IsBlackBackground { get; set; } = false;
-        public static string Subset { get; set; } = null;
+
+        public static ConfigInstance GetModder()
+        {
+            return new ConfigInstance();
+        }
     }
 }

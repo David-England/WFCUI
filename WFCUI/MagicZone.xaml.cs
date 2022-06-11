@@ -65,9 +65,8 @@ namespace WFCUI
                 if (dfManager.Extension != ".png") throw new Exception($"Dropped file is a \"{dfManager.Extension}\"; we only accept \".png\"s here.");
 
                 Bitmap bmap = Top.Fire(dfManager.FilenameNoExtension, Config.IsOverlapping,
-                    Config.Height, Config.Heuristic, Config.Limit, Config.MaxAttempts, Config.IsPeriodic, Config.Size, Config.IsTextOutput, Config.Width,
-                    Config.Ground, Config.N, Config.IsPeriodicInput, Config.Symmetry,
-                    Config.IsBlackBackground, Config.Subset);
+                    heuristic: Config.Heuristic, maxAttempts: Config.MaxAttempts, size: Config.Size,
+                    n: Config.N);
                 return ConvertOldBitmapToNew(bmap);
             }
         }

@@ -22,6 +22,7 @@ namespace WFCUI
         public ConfigWindow()
         {
             InitializeComponent();
+            DataContext = Config.GetModder();
         }
     }
 }
