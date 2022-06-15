@@ -23,6 +23,7 @@ namespace WFCUI
         {
             InitializeComponent();
             DataContext = Config.GetModder();
+            heuristicDDL.ItemsSource = new List<string> { "entropy", "mrv", "scanline" };
         }
     }
 }
