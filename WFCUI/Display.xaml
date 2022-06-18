@@ -8,7 +8,11 @@
         Title="Display" Height="200" Width="400">
     <Window.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="Save" FontFamily="Lucida Console" FontSize="24" Background="White" Click="Save_Click"/>
+            <MenuItem Header="Save" FontFamily="Lucida Console" FontSize="24" Background="White" Click="Save_Click">
+                <MenuItem.Icon>
+                    <Image Source="save.ico"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
     </Window.ContextMenu>
     <Grid>
