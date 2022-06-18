@@ -38,12 +38,14 @@ namespace WFCUI
 
             try
             {
-                using (DatafileManager dm = new DatafileManager(GrabDataLocation(e)))
+                using (new CursorInChief(Cursors.Wait))
                 {
-                    BitmapSource bi = RunAlgorithm(dm);
-                    new Display(dm.FilenameNoExtension, bi).Show();
+                    using (DatafileManager dm = new DatafileManager(GrabDataLocation(e)))
+                    {
+                        BitmapSource bi = RunAlgorithm(dm);
+                        new Display(dm.FilenameNoExtension, bi).Show();
+                    }
                 }
-                
             }
             catch (Exception exc)
             {
