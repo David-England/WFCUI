@@ -6,6 +6,11 @@
         xmlns:local="clr-namespace:WFCUI"
         mc:Ignorable="d"
         Title="Display" Height="200" Width="400">
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Save" FontFamily="Lucida Console" FontSize="24" Background="White" Click="Save_Click"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid>
         <Image Name="Output"/>
     </Grid>
