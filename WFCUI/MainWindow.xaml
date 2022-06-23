@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WFCUI"
         mc:Ignorable="d"
-        Title="WFC" Height="240" Width="160">
+        Title="WFC" Height="240" Width="160" Icon="duo.ico">
     
     <Grid>
         <Grid.RowDefinitions>

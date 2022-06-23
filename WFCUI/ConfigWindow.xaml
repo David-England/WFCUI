@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WFCUI"
         mc:Ignorable="d"
-        Title="Config" Height="800" Width="180">
+        Title="Config" Height="800" Width="180" Icon="duo.ico">
     
     <Window.Resources>
         <local:IntStringConverter x:Key="isc"/>
