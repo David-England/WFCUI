@@ -26,9 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="WaveFunctionCollapse">
-      <HintPath>WaveFunctionCollapse.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\WaveFunctionCollapse\WaveFunctionCollapse.csproj" />
   </ItemGroup>
 
 </Project>
