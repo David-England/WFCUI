@@ -12,17 +12,20 @@ using System.Drawing;
 using System.Xml.Linq;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
+using WaveFunctionCollapse.Data;
+using WaveFunctionCollapse.Heuristics;
 
 namespace WaveFunctionCollapse
 {
     class SimpleTiledModel : Model
     {
-        List<Color[]> tiles;
+        List<Color[]> tilePixels;
         List<string> tilenames;
         int tilesize;
         bool blackBackground;
 
-        public SimpleTiledModel(string name, string subsetName, int width, int height, bool periodic, bool blackBackground, Heuristic heuristic) : base(width, height, 1, periodic, heuristic)
+        public SimpleTiledModel(string name, string subsetName, GridData g, IChoiceHeuristic choiceHeuristic, IPatternHeuristic patternHeuristic,
+            bool blackBackground) : base(1, g, choiceHeuristic, patternHeuristic)
         {
             this.blackBackground = blackBackground;
 
@@ -48,7 +51,7 @@ namespace WaveFunctionCollapse
             Color[] rotate(Color[] array) => tile((x, y) => array[tilesize - 1 - y + x * tilesize]);
             Color[] reflect(Color[] array) => tile((x, y) => array[tilesize - 1 - x + y * tilesize]);
 
-            tiles = new List<Color[]>();
+            tilePixels = new List<Color[]>();
             tilenames = new List<string>();
             var weightList = new List<double>();
 
@@ -128,20 +131,20 @@ namespace WaveFunctionCollapse
                     for (int t = 0; t < cardinality; t++)
                     {
                         Bitmap bitmap = new Bitmap($"samples/{name}/{tilename} {t}.png");
-                        tiles.Add(tile((x, y) => bitmap.GetPixel(x, y)));
+                        tilePixels.Add(tile((x, y) => bitmap.GetPixel(x, y)));
                         tilenames.Add($"{tilename} {t}");
                     }
                 }
                 else
                 {
                     Bitmap bitmap = new Bitmap($"samples/{name}/{tilename}.png");
-                    tiles.Add(tile((x, y) => bitmap.GetPixel(x, y)));
+                    tilePixels.Add(tile((x, y) => bitmap.GetPixel(x, y)));
                     tilenames.Add($"{tilename} 0");
 
                     for (int t = 1; t < cardinality; t++)
                     {
-                        if (t <= 3) tiles.Add(rotate(tiles[T + t - 1]));
-                        if (t >= 4) tiles.Add(reflect(tiles[T + t - 4]));
+                        if (t <= 3) tilePixels.Add(rotate(tilePixels[T + t - 1]));
+                        if (t >= 4) tilePixels.Add(reflect(tilePixels[T + t - 4]));
                         tilenames.Add($"{tilename} {t}");
                     }
                 }
@@ -150,14 +153,14 @@ namespace WaveFunctionCollapse
             }
 
             T = action.Count;
-            weights = weightList.ToArray();
+            Patterns.Weights = weightList.ToArray();
 
-            propagator = new int[4][][];
+            Patterns.Adjacencies = new int[4][][];
             var densePropagator = new bool[4][][];
             for (int d = 0; d < 4; d++)
             {
                 densePropagator[d] = new bool[T][];
-                propagator[d] = new int[T][];
+                Patterns.Adjacencies[d] = new int[T][];
                 for (int t = 0; t < T; t++) densePropagator[d][t] = new bool[T];
             }
 
@@ -204,52 +207,52 @@ namespace WaveFunctionCollapse
 
                     int ST = sp.Count;
                     if (ST == 0) Console.WriteLine($"ERROR: tile {tilenames[t1]} has no neighbors in direction {d}");
-                    propagator[d][t1] = new int[ST];
-                    for (int st = 0; st < ST; st++) propagator[d][t1][st] = sp[st];
+                    Patterns.Adjacencies[d][t1] = new int[ST];
+                    for (int st = 0; st < ST; st++) Patterns.Adjacencies[d][t1][st] = sp[st];
                 }
         }
 
         public override Bitmap Graphics()
         {
-            Bitmap result = new Bitmap(MX * tilesize, MY * tilesize);
+            Bitmap result = new Bitmap(Grid.X * tilesize, Grid.Y * tilesize);
             int[] bitmapData = new int[result.Height * result.Width];
 
-            if (observed[0] >= 0)
+            if (Tiles.ObservedValues[0] >= 0)
             {
-                for (int x = 0; x < MX; x++) for (int y = 0; y < MY; y++)
+                for (int x = 0; x < Grid.X; x++) for (int y = 0; y < Grid.Y; y++)
                     {
-                        Color[] tile = tiles[observed[x + y * MX]];
+                        Color[] tile = tilePixels[Tiles.ObservedValues[x + y * Grid.X]];
                         for (int yt = 0; yt < tilesize; yt++) for (int xt = 0; xt < tilesize; xt++)
                             {
                                 Color c = tile[xt + yt * tilesize];
-                                bitmapData[x * tilesize + xt + (y * tilesize + yt) * MX * tilesize] =
+                                bitmapData[x * tilesize + xt + (y * tilesize + yt) * Grid.X * tilesize] =
                                     unchecked((int)0xff000000 | (c.R << 16) | (c.G << 8) | c.B);
                             }
                     }
             }
             else
             {
-                for (int x = 0; x < MX; x++) for (int y = 0; y < MY; y++)
+                for (int x = 0; x < Grid.X; x++) for (int y = 0; y < Grid.Y; y++)
                     {
-                        bool[] a = wave[x + y * MX];
+                        bool[] a = Tiles.WaveMatrix[x + y * Grid.X];
                         int amount = (from b in a where b select 1).Sum();
-                        double lambda = 1.0 / (from t in Enumerable.Range(0, T) where a[t] select weights[t]).Sum();
+                        double lambda = 1.0 / (from t in Enumerable.Range(0, T) where a[t] select Patterns.Weights[t]).Sum();
 
                         for (int yt = 0; yt < tilesize; yt++) for (int xt = 0; xt < tilesize; xt++)
                             {
-                                if (blackBackground && amount == T) bitmapData[x * tilesize + xt + (y * tilesize + yt) * MX * tilesize] = unchecked((int)0xff000000);
+                                if (blackBackground && amount == T) bitmapData[x * tilesize + xt + (y * tilesize + yt) * Grid.X * tilesize] = unchecked((int)0xff000000);
                                 else
                                 {
                                     double r = 0, g = 0, b = 0;
                                     for (int t = 0; t < T; t++) if (a[t])
                                         {
-                                            Color c = tiles[t][xt + yt * tilesize];
-                                            r += (double)c.R * weights[t] * lambda;
-                                            g += (double)c.G * weights[t] * lambda;
-                                            b += (double)c.B * weights[t] * lambda;
+                                            Color c = tilePixels[t][xt + yt * tilesize];
+                                            r += (double)c.R * Patterns.Weights[t] * lambda;
+                                            g += (double)c.G * Patterns.Weights[t] * lambda;
+                                            b += (double)c.B * Patterns.Weights[t] * lambda;
                                         }
 
-                                    bitmapData[x * tilesize + xt + (y * tilesize + yt) * MX * tilesize] =
+                                    bitmapData[x * tilesize + xt + (y * tilesize + yt) * Grid.X * tilesize] =
                                         unchecked((int)0xff000000 | ((int)r << 16) | ((int)g << 8) | (int)b);
                                 }
                             }
@@ -266,9 +269,9 @@ namespace WaveFunctionCollapse
         public string TextOutput()
         {
             var result = new System.Text.StringBuilder();
-            for (int y = 0; y < MY; y++)
+            for (int y = 0; y < Grid.Y; y++)
             {
-                for (int x = 0; x < MX; x++) result.Append($"{tilenames[observed[x + y * MX]]}, ");
+                for (int x = 0; x < Grid.X; x++) result.Append($"{tilenames[Tiles.ObservedValues[x + y * Grid.X]]}, ");
                 result.Append(Environment.NewLine);
             }
             return result.ToString();

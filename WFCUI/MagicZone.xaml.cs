@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WaveFunctionCollapse;
+using WaveFunctionCollapse.Heuristics;
 
 namespace WFCUI
 {
@@ -66,8 +67,8 @@ namespace WFCUI
             {
                 if (dfManager.Extension != ".png") throw new Exception($"Dropped file is a \"{dfManager.Extension}\"; we only accept \".png\"s here.");
 
-                Bitmap bmap = Top.Fire(dfManager.FilenameNoExtension, Config.IsOverlapping,
-                    heuristic: Config.Heuristic, maxAttempts: Config.MaxAttempts, size: Config.Size,
+                Bitmap bmap = Top.Fire(dfManager.FilenameNoExtension, Config.ChoiceHeuristic, Config.PatternHeuristic, Config.IsOverlapping,
+                    maxAttempts: Config.MaxAttempts, size: Config.Size,
                     n: Config.N);
                 return ConvertOldBitmapToNew(bmap);
             }

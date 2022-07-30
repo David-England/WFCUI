@@ -8,19 +8,31 @@ The software is provided "as is", without warranty of any kind, express or impli
 
 using System;
 using System.Drawing;
+using WaveFunctionCollapse.Data;
+using WaveFunctionCollapse.Heuristics;
 
 namespace WaveFunctionCollapse
 {
     public static class Top
     {
-        public static Bitmap Fire(string name, bool isOverlapping = true, int? height = null,
-            string heuristic = "entropy", int limit = -1, int maxAttempts = 10, bool isPeriodic = false, int? size = null, bool isTextOutput = false, int? width = null,
+        public static Bitmap Fire(string name, IChoiceHeuristic choiceHeuristic, IPatternHeuristic patternHeuristic, bool isOverlapping = true,
+            int? height = null, int limit = -1, int maxAttempts = 10, bool isPeriodic = false, int? size = null, bool isTextOutput = false, int? width = null,
             /* overlapping model params */ int ground = 0, int n = 3, bool isPeriodicInput = true, int symmetry = 8,
             /* simpletiled model params */ bool isBlackBackground = false, string subset = null)
         {
+            Model m;
             SetNullables();
 
-            return RunModelUntilSuccess(ConfigureModel());
+            if (isOverlapping)
+            {
+                m = new OverlappingModel(name, n, new GridData(width.Value, height.Value, isPeriodic), choiceHeuristic, patternHeuristic, isPeriodicInput, symmetry, ground);
+            }
+            else
+            {
+                m = new SimpleTiledModel(name, subset, new GridData(width.Value, height.Value, isPeriodic), choiceHeuristic, patternHeuristic, isBlackBackground);
+            }
+
+            return RunModelUntilSuccess(m);
 
             void SetNullables()
             {
@@ -28,18 +40,6 @@ namespace WaveFunctionCollapse
 
                 height ??= size;
                 width ??= size;
-            }
-
-            Model ConfigureModel()
-            {
-                if (isOverlapping)
-                {
-                    return new OverlappingModel(name, n, width.Value, height.Value, isPeriodicInput, isPeriodic, symmetry, ground, ChooseHeuristic(heuristic));
-                }
-                else
-                {
-                    return new SimpleTiledModel(name, subset, width.Value, height.Value, isPeriodic, isBlackBackground, ChooseHeuristic(heuristic));
-                }
             }
 
             Bitmap RunModelUntilSuccess(Model model)
@@ -57,21 +57,6 @@ namespace WaveFunctionCollapse
                 }
 
                 throw new Exception();
-            }
-        }
-        
-        private static Model.Heuristic ChooseHeuristic(string heuristicString)
-        {
-            switch (heuristicString.ToLower())
-            {
-                case "entropy":
-                    return Model.Heuristic.Entropy;
-                case "mrv":
-                    return Model.Heuristic.MRV;
-                case "scanline":
-                    return Model.Heuristic.Scanline;
-                default:
-                    throw new Exception();
             }
         }
     }

@@ -28,10 +28,10 @@
         <TextBox Grid.Row="1" Text="{Binding Path=Size, Converter={StaticResource isc}}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
         <Label Grid.Row="2" Content="n" VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
         <TextBox Grid.Row="3" Text="{Binding Path=N, Converter={StaticResource isc}}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
-        <Label Grid.Row="4" Content="Overlap" VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
-        <CheckBox Grid.Row="5" IsChecked="{Binding Path=IsOverlapping}" Margin="10" Background="Cyan"/>
-        <Label Grid.Row="6" Content="Heuristic" VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
-        <ComboBox Grid.Row="7" Name="heuristicDDL" Text="{Binding Path=Heuristic}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
+        <Label Grid.Row="4" Content="Choice hx." VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
+        <ComboBox Grid.Row="5" Name="choiceHeuristicDDL" Text="{Binding Path=ChoiceHeuristic}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
+        <Label Grid.Row="6" Content="Pattern hx." VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
+        <ComboBox Grid.Row="7" Name="patternHeuristicDDL" Text="{Binding Path=PatternHeuristic}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
         <Label Grid.Row="8" Content="Attempts" VerticalAlignment="Bottom" FontFamily="Lucida Console" FontSize="24"/>
         <TextBox Grid.Row="9" Text="{Binding Path=MaxAttempts, Converter={StaticResource isc}}" Margin="10" FontFamily="Lucida Console" FontSize="24"/>
     </Grid>
